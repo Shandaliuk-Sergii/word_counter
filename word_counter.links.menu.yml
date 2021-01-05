@@ -1,0 +1,13 @@
+word_counter.admin_config:
+  title: 'Word counter config'
+  route_name: word_counter.admin_config
+  parent: system.admin_config
+  description: "Word counter config"
+  weight: 100
+
+word_counter.config:
+  title: 'Word counter config'
+  route_name: word_counter.config
+  parent: word_counter.admin_config
+  description: "Word counter config"
+  weight: 1

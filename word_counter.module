@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Contains word_counter.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\NodeInterface;
+use Drupal\word_counter\Form\WordCounterConfigForm;
+
+/**
+ * Implements hook_help().
+ */
+function word_counter_help(string $route_name, RouteMatchInterface $route_match) {
+  if ($route_name === 'help.page.word_counter') {
+    $output = '';
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('This module provides custom functionality for counting words.') . '</p>';
+    return $output;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function word_counter_node_presave(NodeInterface $node) {
+  $config = \Drupal::config(WordCounterConfigForm::CONFIG_NAME);
+
+  // Check if word_counter functionality turned on and if all fields exists.
+  if (
+    $config->get('word_counter') &&
+    $node->hasField('body') &&
+    $node->hasField('field_word_count')
+  ) {
+    $body = $node->get('body')->value;
+
+    // Check if body value has changed and calculate the words of body field.
+    if (
+      !$node->original ||
+      ($node->original && $body !== $node->original->get('body')->value)
+    ) {
+      $word_count = str_word_count(strip_tags($body));
+      $node->set('field_word_count', $word_count);
+    }
+  }
+}
+
+/**
+ * Implements template_preprocess_field().
+ */
+function word_counter_preprocess_field(array &$variables) {
+
+  // Hide calculated values if word_counter functionality turned off.
+  if ($variables['element']['#field_name'] === 'field_word_count') {
+    $config = \Drupal::config(WordCounterConfigForm::CONFIG_NAME);
+    if (!$config->get('word_counter')) {
+      $variables['label_hidden'] = TRUE;
+      unset($variables['items']);
+    }
+  }
+}

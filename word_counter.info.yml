@@ -1,0 +1,8 @@
+name: Word Counter
+description: This module provides custom functionality for counting words.
+core: 8.x
+type: module
+
+version: '8.x-1.11'
+project: 'word_counter'
+datestamp: 1584598067

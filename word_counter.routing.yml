@@ -1,0 +1,16 @@
+word_counter.admin_config:
+  path: "/admin/config/counter"
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: "Word counter settings"
+  requirements:
+    _role: 'administrator'
+word_counter.config:
+  path: '/admin/config/counter/settings'
+  defaults:
+    _form: '\Drupal\word_counter\Form\WordCounterConfigForm'
+    _title: 'Word counter settings'
+  requirements:
+    _role: 'administrator'
+  options:
+    _admin_route: TRUE
